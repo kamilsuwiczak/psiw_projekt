@@ -4,30 +4,10 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-int main(int argc, char *argv[]){
-    int fd;
-    char bufor[128];
-    int bytesRead;
-    int numbers[6];
+void parseData(char bufor[128], int bytesRead, int numbers[6]){
     int numIndex = 0;
     int currentNumber = 0;
-    int isNumber = 0;   
-    int A, B, C, aPrice, bPrice, cPrice; 
-
-    fd = open(argv[1], O_RDONLY);
-    if (fd<0){
-        perror("Nie można odczytać pliku");
-        return 1;
-    }
-
-    bytesRead = read(fd, bufor, sizeof(bufor));
-    if (bytesRead < 0){
-        perror("Błąd odczytu pliku");
-        return 1;
-    }
-
-    close(fd);
-
+    int isNumber = 0; 
     for (int i = 0; i < bytesRead; i++){
         if (isdigit(bufor[i])){
             currentNumber = currentNumber * 10 + (bufor[i] - '0');
@@ -45,13 +25,39 @@ int main(int argc, char *argv[]){
         numIndex++;
     }
 
+}
+
+int main(int argc, char *argv[]){
+    int fd;
+    char bufor[128];
+    int bytesRead;
+    int numbers[6];
+    int A, B, C, aPrice, bPrice, cPrice; 
+
+    fd = open(argv[1], O_RDONLY);
+    if (fd<0){
+        perror("Nie można odczytać pliku");
+        return 1;
+    }
+
+    bytesRead = read(fd, bufor, sizeof(bufor));
+    if (bytesRead < 0){
+        perror("Błąd odczytu pliku");
+        return 1;
+    }
+
+    close(fd);
+    printf("bytesRead: %d\n", bytesRead);
+    printf("bufor: %s\n", bufor);
+
+    
+    parseData(bufor, bytesRead, numbers);
     A = numbers[0];
     B = numbers[1];
     C = numbers[2];
     aPrice = numbers[3];
     bPrice = numbers[4];
     cPrice = numbers[5];
-
     printf("A: %d, B: %d, C: %d, aPrice: %d, bPrice: %d, cPrice: %d\n", A, B, C, aPrice, bPrice, cPrice);
 
 
