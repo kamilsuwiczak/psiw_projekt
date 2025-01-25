@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+
 void parseData(char bufor[128], int bytesRead, int numbers[6]){
     int numIndex = 0;
     int currentNumber = 0;
@@ -47,9 +48,6 @@ int main(int argc, char *argv[]){
     }
 
     close(fd);
-    printf("bytesRead: %d\n", bytesRead);
-    printf("bufor: %s\n", bufor);
-
     
     parseData(bufor, bytesRead, numbers);
     A = numbers[0];

@@ -47,9 +47,6 @@ int main(int argc, char *argv[]){
     }
 
     close(fd);
-    printf("bytesRead: %d\n", bytesRead);
-    printf("bufor: %s\n", bufor);
-
     
     parseData(bufor, bytesRead, numbers);
     A = numbers[0];
