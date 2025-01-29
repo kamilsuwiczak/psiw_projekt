@@ -7,6 +7,7 @@
 #include <sys/msg.h>
 #include <sys/types.h>
 
+
 struct msgbuf{
     long mtype;
     int id;
@@ -15,12 +16,20 @@ struct msgbuf{
     int C;
 };
 
+struct msgbuf2{
+    long mtype;
+    int gold;
+};
+
+
 int main(int argc, char *argv[]){
     key_t key = atoi(argv[1]);
     int liczbaZamowien = atoi(argv[2]);
     int maxAPerZam = atoi(argv[3]);
     int maxBPerZam = atoi(argv[4]);
     int maxCPerZam = atoi(argv[5]);
+
+    int gold = 0;
 
     int msgid = msgget(key, 0666 | IPC_CREAT);
     if (msgid == -1){
@@ -29,6 +38,7 @@ int main(int argc, char *argv[]){
     }
 
 struct msgbuf zamowienie;
+struct msgbuf2 goldMsg;
 
     for (int i = 0; i < liczbaZamowien; i++){
         int A = rand() % maxAPerZam + 1;
@@ -45,8 +55,16 @@ struct msgbuf zamowienie;
         printf("Zamówienie nr %d: A: %d, B: %d, C: %d\n", i, A, B, C);
         sleep(1);
     }
-
-    printf("key: %d\n", key);
+    while(1){
+        msgrcv(msgid, &goldMsg, sizeof(goldMsg), 2, 0);
+        gold += goldMsg.gold;
+        // if (msgget(key, 0666)<0){
+        //     break;    
+        // }
+        printf("Złoto: %d\n", gold);
+    }
+    
+    
 
     return 0;
 }
