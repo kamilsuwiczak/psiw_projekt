@@ -85,7 +85,7 @@ int main(int argc, char *argv[]){
         return 1;
     }
 
-    int msgid2 = msgget(1, 0666 | IPC_CREAT);
+    int msgid2 = msgget(10, 0666 | IPC_CREAT);
     if (msgid2 == -1){
         perror("Nie można utworzyć kolejki komunikatów");
         return 1;
@@ -114,16 +114,19 @@ int main(int argc, char *argv[]){
                             
                             magazyn.mtype = 2;
                             msgsnd(msgid2, &magazyn, sizeof(magazyn), 0);
+                            
+                            alarm(180);
                         } else {
                             printf("Magazyn nie ma wystarczających zasobów na zamówienie nr %d\n", zamowienie.id);
                             kill(zamowienie.id, SIGKILL);
-                            // liczbaKurierow--;
-                            // if (liczbaKurierow == 0){
-                            //     msgctl(1, IPC_RMID, NULL);
-                            //     msgctl(key, IPC_RMID, NULL);
-                            //     kill(getpid(), SIGKILL);
-                            //     return 0;
-                            // }
+                            liczbaKurierow--;
+                            if (liczbaKurierow == 0){
+                                // msgctl(1, IPC_RMID, NULL);
+                                // msgctl(key, IPC_RMID, NULL);
+                                printf("Surowiec A: %d, Surowiec B: %d, Surowiec C: %d\n", surowiecA, surowiecB, surowiecC);
+                                kill(getpid(), SIGKILL);
+                                return 0;
+                            }
                         }
                        
                 }
